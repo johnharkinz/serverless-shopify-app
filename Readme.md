@@ -39,10 +39,10 @@ and initialise it for npm
 ```
 npm init -y
 ```
-Now we have the packages.json file we can add some packages.
+Now we have the ```packages.json``` file we can add some packages.
 ```
 $ npm i --save \
-    axios \ ??
+    axios \
     koa \
     koa-session \
     @shopify/koa-shopify-auth \
@@ -58,6 +58,95 @@ $ npm i --save \
     serverless-domain-manager
 ```
 
+While we are in the ```packages.json``` file add the following scripts. We'll use these later.
+```
+  "scripts": {
+	"dev": "next",
+	"build": "next build",
+    "deploy": "next build && sls deploy"
+  },
+```
+
+The ```serverless.yml``` is created with a bunch of example code. I deleted it and replaced it with this.
+```
+service: serverless-shopify-app
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${self:custom.config.NODE_ENV}
+  region: eu-west-2
+
+functions:
+  index:
+    handler: handler.index
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
+
+plugins:
+  - serverless-apigw-binary
+  - serverless-domain-manager
+
+custom:
+  secrets: ${file(config.json)}
+  apigwBinary:
+    types:
+      - '*/*'
+  customDomain:
+    domainName: ${self:custom.config.DOMAIN}
+    basePath: ''
+    stage: ${self:custom.config.NODE_ENV}
+    createRoute53Record: true 
+```
+
+Add a new file ```config.json``` for our environment and domain settings
+```
+{
+	"NODE_ENV": "production",
+	"DOMAIN": "ssa.uark.uk"
+}
+```
+## A Super Simple Next App
+
+Next create ```pages/index.js```
+```
+const Index = () => (
+	<div>
+	  <p>Serverless Shopify App</p>
+	</div>
+  );
+  
+  export default Index;
+```
+
+Try building the next js app and check localhost:3000 in your browser
+```
+$ npm run dev
+
+> serverless-shopify-app@1.0.0 dev /Users/john/Code/serverless-shopify-app
+> next
+
+ready - started server on http://localhost:3000
+```
+
+## The Shopify App
+
+- Log in to partner account
+- In Apps create a new app and choose ***Custom App***
+- Add your name & url details
+- Add <your-url>/auth/callback to the allow urls field
+- Add shopify keys to ```.env``` file
+```	
+SHOPIFY_API_KEY='xxxxxxxxxxxxxxxx'
+SHOPIFY_API_SECRET_KEY='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+```
+
+## Use serverless to deploy to aws
+```$ npm run deploy```
+
+AWS Stuff
+- Need a domain in Route53
 
 
 # Files
