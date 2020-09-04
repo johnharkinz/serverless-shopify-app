@@ -26,16 +26,13 @@ koa.use(
 		scopes: ['read_products'],
 		afterAuth(ctx) {
 		const { shop, accessToken } = ctx.session;
-
-		ctx.redirect('/Readme.md');
+		ctx.redirect('/');
 		},
 	}),
 );
 
 koa.use(verifyRequest());
-koa.use(async (ctx) => {
-	await handle(ctx.req, ctx.res);
-	ctx.respond = false;
-	ctx.res.statusCode = 200;
-	}
-);
+
+koa.use( ctx => {
+	ctx.body = 'Here';
+});

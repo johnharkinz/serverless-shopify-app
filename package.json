@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "deploy": "next build && sls deploy"
+    "deploy": "next build && sls deploy",
+    "remove": "sls remove"
   },
   "repository": {
     "type": "git",
