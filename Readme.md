@@ -135,7 +135,7 @@ ready - started server on http://localhost:3000
 - Log in to partner account
 - In Apps create a new app and choose ***Custom App***
 - Add your name & url details
-- Add <your-url>/auth/callback to the allow urls field
+- Add <your-url>/auth/callback to the Allowed redirection URL(s) field
 - Add shopify keys to ```.env``` file
 ```	
 SHOPIFY_API_KEY='xxxxxxxxxxxxxxxx'
